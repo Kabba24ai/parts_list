@@ -2,13 +2,15 @@ import { useState } from 'react';
 import PartsManagement from './PartsManagement';
 import PartDetail from './PartDetail';
 import TemplateManagement from './TemplateManagement';
+import TemplateDetail from './TemplateDetail';
 import { Package, FileText } from 'lucide-react';
 
-type View = 'parts' | 'templates' | 'part-create' | 'part-edit';
+type View = 'parts' | 'templates' | 'part-create' | 'part-edit' | 'template-create' | 'template-edit';
 
 function App() {
   const [activeView, setActiveView] = useState<View>('parts');
   const [editingPartId, setEditingPartId] = useState<number | null>(null);
+  const [editingTemplateId, setEditingTemplateId] = useState<number | null>(null);
 
   const handleCreatePart = () => {
     setActiveView('part-create');
@@ -30,6 +32,28 @@ function App() {
     alert(`Part ${editingPartId ? 'updated' : 'created'} successfully!`);
     setActiveView('parts');
     setEditingPartId(null);
+  };
+
+  const handleCreateTemplate = () => {
+    setActiveView('template-create');
+    setEditingTemplateId(null);
+  };
+
+  const handleEditTemplate = (templateId: number) => {
+    setActiveView('template-edit');
+    setEditingTemplateId(templateId);
+  };
+
+  const handleBackToTemplates = () => {
+    setActiveView('templates');
+    setEditingTemplateId(null);
+  };
+
+  const handleSaveTemplate = (templateData: any) => {
+    console.log('Saving template:', templateData);
+    alert(`Template ${editingTemplateId ? 'updated' : 'created'} successfully!`);
+    setActiveView('templates');
+    setEditingTemplateId(null);
   };
 
   return (
@@ -85,8 +109,16 @@ function App() {
 
         {activeView === 'templates' && (
           <TemplateManagement
-            onCreateTemplate={() => console.log('Create template')}
-            onEditTemplate={(id) => console.log('Edit template', id)}
+            onCreateTemplate={handleCreateTemplate}
+            onEditTemplate={handleEditTemplate}
+          />
+        )}
+
+        {(activeView === 'template-create' || activeView === 'template-edit') && (
+          <TemplateDetail
+            templateId={editingTemplateId}
+            onBack={handleBackToTemplates}
+            onSave={handleSaveTemplate}
           />
         )}
       </div>
