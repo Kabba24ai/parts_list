@@ -5,6 +5,7 @@ interface TemplateDetailProps {
   templateId?: number | null;
   onBack: () => void;
   onSave: (templateData: any) => void;
+  onCreatePart?: (templateId: number) => void;
 }
 
 const mockParts = [
@@ -88,11 +89,12 @@ const mockParts = [
   }
 ];
 
-const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBack, onSave }) => {
+const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBack, onSave, onCreatePart }) => {
   const [templateData, setTemplateData] = useState({
     name: '',
     category: '',
-    description: ''
+    description: '',
+    assigned_equipment_ids: [] as string[]
   });
 
   const [templateParts, setTemplateParts] = useState<any[]>([]);
@@ -108,19 +110,35 @@ const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBa
 
   const categories = ['Bulldozers', 'Compressors', 'Excavators', 'Generators', 'Loaders', 'Supplies'];
 
+  const equipmentOptions = [
+    { id: 'N/A', name: 'General Use (Supplies)', category: 'Supplies' },
+    { id: 'EXC-001', name: 'CAT 320D Excavator', category: 'Excavators' },
+    { id: 'EXC-002', name: 'John Deere 350G Excavator', category: 'Excavators' },
+    { id: 'GEN-045', name: 'Kohler 150kW Generator', category: 'Generators' },
+    { id: 'GEN-046', name: 'Cummins 200kW Generator', category: 'Generators' },
+    { id: 'BUL-012', name: 'John Deere 650K Dozer', category: 'Bulldozers' },
+    { id: 'BUL-013', name: 'CAT D6T Dozer', category: 'Bulldozers' },
+    { id: 'LDR-023', name: 'CAT 950 Wheel Loader', category: 'Loaders' },
+    { id: 'LDR-024', name: 'John Deere 644K Loader', category: 'Loaders' },
+    { id: 'CMP-078', name: 'Atlas Copco GA30', category: 'Compressors' },
+    { id: 'CMP-079', name: 'Ingersoll Rand R55', category: 'Compressors' }
+  ];
+
   React.useEffect(() => {
     if (templateId) {
       const mockTemplateData = {
         name: 'Excavator Standard Maintenance',
         category: 'Excavators',
         description: 'Standard maintenance parts for all excavator models',
+        assigned_equipment_ids: ['EXC-001', 'EXC-002'],
         parts: [mockParts[0]]
       };
 
       setTemplateData({
         name: mockTemplateData.name,
         category: mockTemplateData.category,
-        description: mockTemplateData.description
+        description: mockTemplateData.description,
+        assigned_equipment_ids: mockTemplateData.assigned_equipment_ids
       });
       setTemplateParts(mockTemplateData.parts);
     }
@@ -305,7 +323,7 @@ const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBa
             </div>
           </div>
 
-          <div>
+          <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <textarea
               name="description"
@@ -316,6 +334,52 @@ const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBa
               placeholder="Enter template description"
             />
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Assigned Equipment IDs
+            </label>
+            <div className="space-y-2">
+              {equipmentOptions
+                .filter(eq => eq.category === templateData.category)
+                .map(equipment => (
+                  <label key={equipment.id} className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={templateData.assigned_equipment_ids.includes(equipment.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setTemplateData(prev => ({
+                            ...prev,
+                            assigned_equipment_ids: [...prev.assigned_equipment_ids, equipment.id]
+                          }));
+                        } else {
+                          setTemplateData(prev => ({
+                            ...prev,
+                            assigned_equipment_ids: prev.assigned_equipment_ids.filter(id => id !== equipment.id)
+                          }));
+                        }
+                      }}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    />
+                    <span className="text-sm text-gray-900">
+                      {equipment.name} <span className="text-gray-500 font-mono text-xs">({equipment.id})</span>
+                    </span>
+                  </label>
+                ))}
+              {templateData.category && equipmentOptions.filter(eq => eq.category === templateData.category).length === 0 && (
+                <p className="text-sm text-gray-500 italic">No equipment available for this category</p>
+              )}
+              {!templateData.category && (
+                <p className="text-sm text-gray-500 italic">Select a category first to assign equipment</p>
+              )}
+              {templateData.assigned_equipment_ids.length === 0 && templateData.category && (
+                <p className="text-xs text-gray-500 mt-2">
+                  No equipment assigned. Parts created from this template will show "Not Assigned".
+                </p>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
@@ -324,13 +388,24 @@ const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBa
               <h2 className="text-lg font-semibold text-gray-900">Template Parts</h2>
               <p className="text-sm text-gray-600">Parts included in this template ({templateParts.length} parts)</p>
             </div>
-            <button
-              onClick={() => setShowAddPartsModal(true)}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
-            >
-              <Plus className="h-4 w-4" />
-              <span>Add Parts</span>
-            </button>
+            <div className="flex items-center gap-2">
+              {onCreatePart && templateId && (
+                <button
+                  onClick={() => onCreatePart(templateId)}
+                  className="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Create New Part</span>
+                </button>
+              )}
+              <button
+                onClick={() => setShowAddPartsModal(true)}
+                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                <span>Add Existing Parts</span>
+              </button>
+            </div>
           </div>
 
           {errors.parts && (

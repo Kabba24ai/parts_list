@@ -56,6 +56,12 @@ function App() {
     setEditingTemplateId(null);
   };
 
+  const handleCreatePartFromTemplate = (templateId: number) => {
+    setActiveView('part-create');
+    setEditingPartId(null);
+    setEditingTemplateId(templateId);
+  };
+
   return (
     <div className="h-screen flex flex-col">
       {(activeView === 'parts' || activeView === 'templates') && (
@@ -102,8 +108,20 @@ function App() {
         {(activeView === 'part-create' || activeView === 'part-edit') && (
           <PartDetail
             partId={editingPartId}
-            onBack={handleBackToParts}
-            onSave={handleSavePart}
+            templateId={editingTemplateId}
+            onBack={() => {
+              if (editingTemplateId) {
+                setActiveView('template-edit');
+              } else {
+                handleBackToParts();
+              }
+            }}
+            onSave={(partData) => {
+              handleSavePart(partData);
+              if (editingTemplateId) {
+                setEditingTemplateId(null);
+              }
+            }}
           />
         )}
 
@@ -119,6 +137,7 @@ function App() {
             templateId={editingTemplateId}
             onBack={handleBackToTemplates}
             onSave={handleSaveTemplate}
+            onCreatePart={handleCreatePartFromTemplate}
           />
         )}
       </div>
