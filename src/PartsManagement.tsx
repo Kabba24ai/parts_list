@@ -265,7 +265,7 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
   };
 
   const filteredParts = useMemo(() => {
-    return parts.filter(part => {
+    const filtered = parts.filter(part => {
       const matchesSearch = !filters.search ||
         part.part_name.toLowerCase().includes(filters.search.toLowerCase()) ||
         part.part_number.toLowerCase().includes(filters.search.toLowerCase()) ||
@@ -282,6 +282,20 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       }
 
       return matchesSearch && matchesCategory && matchesEquipmentId && matchesStockStatus;
+    });
+
+    // Sort by: Category (alphabetical), then Equipment Name, then Part Name
+    return filtered.sort((a, b) => {
+      // First, sort by category
+      const categoryCompare = a.category.localeCompare(b.category);
+      if (categoryCompare !== 0) return categoryCompare;
+
+      // Then, sort by equipment name
+      const equipmentCompare = a.equipment_name.localeCompare(b.equipment_name);
+      if (equipmentCompare !== 0) return equipmentCompare;
+
+      // Finally, sort by part name
+      return a.part_name.localeCompare(b.part_name);
     });
   }, [parts, filters]);
 
