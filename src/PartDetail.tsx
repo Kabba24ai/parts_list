@@ -108,7 +108,6 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
       const mockTemplate = {
         id: templateId,
         name: 'Excavator Standard Maintenance',
-        category: 'Excavators',
         assigned_equipment_ids: ['EXC-001', 'EXC-002']
       };
 
@@ -131,7 +130,7 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
           ...prev,
           equipment_id: 'Not Assigned',
           equipment_name: 'Not Assigned',
-          category: mockTemplate.category,
+          category: 'Not Assigned',
           from_template: true,
           selected_template: mockTemplate.name
         }));

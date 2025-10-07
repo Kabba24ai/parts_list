@@ -92,7 +92,6 @@ const mockParts = [
 const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBack, onSave, onCreatePart }) => {
   const [templateData, setTemplateData] = useState({
     name: '',
-    category: '',
     description: '',
     assigned_equipment_ids: [] as string[]
   });
@@ -124,11 +123,16 @@ const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBa
     { id: 'CMP-079', name: 'Ingersoll Rand R55', category: 'Compressors' }
   ];
 
+  const getTemplateCategory = () => {
+    if (templateData.assigned_equipment_ids.length === 0) return 'Not Assigned';
+    const firstEquipment = equipmentOptions.find(eq => eq.id === templateData.assigned_equipment_ids[0]);
+    return firstEquipment?.category || 'Not Assigned';
+  };
+
   React.useEffect(() => {
     if (templateId) {
       const mockTemplateData = {
         name: 'Excavator Standard Maintenance',
-        category: 'Excavators',
         description: 'Standard maintenance parts for all excavator models',
         assigned_equipment_ids: ['EXC-001', 'EXC-002'],
         parts: [mockParts[0]]
@@ -136,7 +140,6 @@ const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBa
 
       setTemplateData({
         name: mockTemplateData.name,
-        category: mockTemplateData.category,
         description: mockTemplateData.description,
         assigned_equipment_ids: mockTemplateData.assigned_equipment_ids
       });
@@ -234,7 +237,7 @@ const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBa
     const newErrors: Record<string, string> = {};
 
     if (!templateData.name.trim()) newErrors.name = 'Template name is required';
-    if (!templateData.category) newErrors.category = 'Category selection is required';
+    if (templateData.assigned_equipment_ids.length === 0) newErrors.equipment = 'At least one equipment must be assigned';
     if (templateParts.length === 0) newErrors.parts = 'At least one part must be added to the template';
 
     setErrors(newErrors);
@@ -302,24 +305,11 @@ const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBa
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Category <span className="text-red-500">*</span>
+                Category <span className="text-blue-600 text-xs">(Auto-assigned from Equipment)</span>
               </label>
-              <select
-                name="category"
-                value={templateData.category}
-                onChange={handleTemplateDataChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                  errors.category ? 'border-red-500' : 'border-gray-300'
-                }`}
-              >
-                <option value="">Select category</option>
-                {categories.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-              {errors.category && (
-                <p className="text-red-500 text-xs mt-1">{errors.category}</p>
-              )}
+              <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 text-sm">
+                {getTemplateCategory()}
+              </div>
             </div>
           </div>
 
@@ -337,48 +327,59 @@ const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBa
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Assigned Equipment IDs
+              Assigned Equipment IDs <span className="text-red-500">*</span>
             </label>
-            <div className="space-y-2">
-              {equipmentOptions
-                .filter(eq => eq.category === templateData.category)
-                .map(equipment => (
-                  <label key={equipment.id} className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={templateData.assigned_equipment_ids.includes(equipment.id)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setTemplateData(prev => ({
-                            ...prev,
-                            assigned_equipment_ids: [...prev.assigned_equipment_ids, equipment.id]
-                          }));
-                        } else {
-                          setTemplateData(prev => ({
-                            ...prev,
-                            assigned_equipment_ids: prev.assigned_equipment_ids.filter(id => id !== equipment.id)
-                          }));
-                        }
-                      }}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <span className="text-sm text-gray-900">
-                      {equipment.name} <span className="text-gray-500 font-mono text-xs">({equipment.id})</span>
-                    </span>
-                  </label>
-                ))}
-              {templateData.category && equipmentOptions.filter(eq => eq.category === templateData.category).length === 0 && (
-                <p className="text-sm text-gray-500 italic">No equipment available for this category</p>
-              )}
-              {!templateData.category && (
-                <p className="text-sm text-gray-500 italic">Select a category first to assign equipment</p>
-              )}
-              {templateData.assigned_equipment_ids.length === 0 && templateData.category && (
-                <p className="text-xs text-gray-500 mt-2">
-                  No equipment assigned. Parts created from this template will show "Not Assigned".
-                </p>
-              )}
+            {errors.equipment && (
+              <p className="text-red-500 text-sm mb-2">{errors.equipment}</p>
+            )}
+            <div className="space-y-2 max-h-60 overflow-y-auto border border-gray-200 rounded-lg p-3">
+              {categories.map(category => {
+                const categoryEquipment = equipmentOptions.filter(eq => eq.category === category);
+                if (categoryEquipment.length === 0) return null;
+
+                return (
+                  <div key={category} className="mb-4 last:mb-0">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-2">{category}</h3>
+                    <div className="space-y-1">
+                      {categoryEquipment.map(equipment => (
+                        <label key={equipment.id} className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={templateData.assigned_equipment_ids.includes(equipment.id)}
+                            onChange={(e) => {
+                              const currentCategory = getTemplateCategory();
+
+                              if (e.target.checked) {
+                                if (currentCategory !== 'Not Assigned' && currentCategory !== equipment.category) {
+                                  alert(`You can only assign equipment from the same category. Current category: ${currentCategory}`);
+                                  return;
+                                }
+                                setTemplateData(prev => ({
+                                  ...prev,
+                                  assigned_equipment_ids: [...prev.assigned_equipment_ids, equipment.id]
+                                }));
+                              } else {
+                                setTemplateData(prev => ({
+                                  ...prev,
+                                  assigned_equipment_ids: prev.assigned_equipment_ids.filter(id => id !== equipment.id)
+                                }));
+                              }
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <span className="text-sm text-gray-900">
+                            {equipment.name} <span className="text-gray-500 font-mono text-xs">({equipment.id})</span>
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
+            <p className="text-xs text-gray-500 mt-2">
+              Select one or more equipment. All equipment must be from the same category.
+            </p>
           </div>
         </div>
 
