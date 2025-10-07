@@ -265,7 +265,7 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                 )}
               </div>
 
-              <div>
+              <div className="w-1/2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Current Stock {!formData.dni && <span className="text-red-500">*</span>}
                 </label>
@@ -288,7 +288,7 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                 )}
               </div>
 
-              <div>
+              <div className="w-1/2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Min Stock {!formData.dni && <span className="text-red-500">*</span>}
                 </label>
@@ -311,18 +311,19 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                 )}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 whitespace-nowrap">Do Not Inventory</label>
-                <div className="flex items-center h-10 px-3">
-                  <input
-                    type="checkbox"
-                    name="dni"
-                    checked={formData.dni}
-                    onChange={handleInputChange}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
-                    title="Do Not Inventory - Check if this part is ordered as needed only"
-                  />
-                </div>
+              <div className="flex items-center gap-2 pt-7">
+                <input
+                  type="checkbox"
+                  id="dni"
+                  name="dni"
+                  checked={formData.dni}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
+                  title="Do Not Inventory - Check if this part is ordered as needed only"
+                />
+                <label htmlFor="dni" className="text-sm font-medium text-gray-700 cursor-pointer whitespace-nowrap">
+                  Do Not Inventory
+                </label>
               </div>
             </div>
 
