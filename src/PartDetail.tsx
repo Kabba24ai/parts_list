@@ -15,6 +15,7 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
     min_stock: '',
     dni: false,
     description: '',
+    general_supply_item: false,
     template_id: templateId || null,
     part_number_1: '',
     cost_1: '',
@@ -325,16 +326,31 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
               </div>
             </div>
 
-            <div className="w-1/2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows={1}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
-                placeholder="Enter part description"
-              />
+            <div className="flex gap-4 items-start">
+              <div className="w-1/2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  rows={1}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
+                  placeholder="Enter part description"
+                />
+              </div>
+              <div className="flex items-center gap-2 pt-7">
+                <input
+                  type="checkbox"
+                  id="general_supply_item"
+                  name="general_supply_item"
+                  checked={formData.general_supply_item}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
+                />
+                <label htmlFor="general_supply_item" className="text-sm font-medium text-gray-700 cursor-pointer whitespace-nowrap">
+                  General Supply Item
+                </label>
+              </div>
             </div>
 
             <div className="grid grid-cols-3 gap-6" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
