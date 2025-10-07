@@ -1,0 +1,253 @@
+import React from 'react';
+import { ArrowLeft, Package, DollarSign, Box, AlertCircle } from 'lucide-react';
+
+interface PartViewProps {
+  partId: number;
+  onBack: () => void;
+}
+
+const PartView: React.FC<PartViewProps> = ({ partId, onBack }) => {
+  const mockPart = {
+    id: partId,
+    part_name: 'Hydraulic Filter',
+    category: 'Excavators',
+    equipment_items: [
+      { name: 'CAT 320D Excavator', id: 'EXC-001' },
+      { name: 'CAT 330F', id: 'EXC-003' },
+      { name: 'Komatsu PC200', id: 'EXC-004' }
+    ],
+    description: 'High-performance hydraulic filter designed for heavy-duty excavator operations',
+    general_supply_item: false,
+    current_stock: 12,
+    min_stock: 5,
+    dni: false,
+    part_numbers: [
+      {
+        part_number: 'HF-2024-001',
+        cost: 45.99,
+        supplier: 'Caterpillar Inc.',
+        supplier_details: {
+          address: '100 NE Adams St, Peoria, IL 61629',
+          phone: '(309) 675-1000',
+          contact: 'Mike Johnson',
+          email: 'mike.johnson@cat.com'
+        }
+      },
+      {
+        part_number: 'HF-ALT-2024-001',
+        cost: 42.50,
+        supplier: 'Parker Hannifin',
+        supplier_details: {
+          address: '6035 Parkland Blvd, Cleveland, OH 44124',
+          phone: '(216) 896-3000',
+          contact: 'Sarah Williams',
+          email: 'sarah.williams@parker.com'
+        }
+      },
+      {
+        part_number: 'HF-ALT2-2024-001',
+        cost: 48.75,
+        supplier: 'John Deere',
+        supplier_details: {
+          address: '1 John Deere Pl, Moline, IL 61265',
+          phone: '(309) 765-8000',
+          contact: 'Robert Chen',
+          email: 'robert.chen@johndeere.com'
+        }
+      }
+    ],
+    template: 'Excavator Standard Maintenance'
+  };
+
+  const getStockBadge = () => {
+    if (mockPart.dni) {
+      return {
+        text: 'DNI',
+        className: 'text-gray-700 bg-gray-100 border-gray-200'
+      };
+    }
+    if (mockPart.current_stock === 0) {
+      return {
+        text: 'Out of Stock',
+        className: 'text-red-700 bg-red-100 border-red-200'
+      };
+    }
+    if (mockPart.current_stock < mockPart.min_stock) {
+      return {
+        text: 'Buy Now',
+        className: 'text-yellow-700 bg-yellow-100 border-yellow-200'
+      };
+    }
+    return {
+      text: 'In Stock',
+      className: 'text-green-700 bg-green-100 border-green-200'
+    };
+  };
+
+  const stockBadge = getStockBadge();
+
+  return (
+    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+      <div className="flex-1 overflow-auto">
+        <div className="max-w-7xl mx-auto p-6">
+          <div className="mb-6">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors mb-4"
+            >
+              <ArrowLeft className="h-5 w-5" />
+              <span className="font-medium">Back to Parts</span>
+            </button>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-6">
+              <div className="flex items-center gap-3 mb-2">
+                <Package className="h-8 w-8 text-white" />
+                <h1 className="text-3xl font-bold text-white">{mockPart.part_name}</h1>
+              </div>
+              <div className="flex items-center gap-4 mt-3">
+                <span className="text-blue-100 text-sm">Category: {mockPart.category}</span>
+                {mockPart.template && (
+                  <>
+                    <span className="text-blue-200">•</span>
+                    <span className="text-blue-100 text-sm">List: {mockPart.template}</span>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="p-8">
+              <div className="grid grid-cols-2 gap-8 mb-8">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Inventory Status</h2>
+                  <div className="space-y-4">
+                    {!mockPart.dni && (
+                      <>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Current Stock</span>
+                          <span className="text-lg font-bold text-gray-900">{mockPart.current_stock}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Minimum Stock</span>
+                          <span className="text-lg font-bold text-gray-900">{mockPart.min_stock}</span>
+                        </div>
+                      </>
+                    )}
+                    <div className="flex justify-between items-center pt-2 border-t border-gray-200">
+                      <span className="text-sm text-gray-600">Status</span>
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${stockBadge.className}`}>
+                        {stockBadge.text}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Part Details</h2>
+                  <div className="space-y-3">
+                    {mockPart.description && (
+                      <div>
+                        <span className="text-sm text-gray-600 block mb-1">Description</span>
+                        <p className="text-sm text-gray-900">{mockPart.description}</p>
+                      </div>
+                    )}
+                    {mockPart.general_supply_item && (
+                      <div className="flex items-center gap-2 pt-2">
+                        <Box className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm font-medium text-blue-600">General Supply Item</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {mockPart.equipment_items && mockPart.equipment_items.length > 0 && (
+                <div className="mb-8">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Assigned Equipment</h2>
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Equipment Name</th>
+                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Equipment ID</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {mockPart.equipment_items.map((item, index) => (
+                          <tr key={index} className="hover:bg-gray-50">
+                            <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
+                            <td className="px-4 py-3">
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-mono font-medium bg-gray-100 text-gray-800 border">
+                                {item.id}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Supplier Information</h2>
+                <div className="grid grid-cols-3 gap-6">
+                  {mockPart.part_numbers.map((item, index) => (
+                    <div key={index} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-500 mb-1">
+                            {index === 0 ? 'Part Number' : `Alt ${index} Part Number`}
+                          </label>
+                          <p className="text-sm font-mono font-medium text-gray-900">{item.part_number}</p>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-medium text-gray-500 mb-1">Cost</label>
+                          <div className="flex items-center gap-1">
+                            <DollarSign className="h-4 w-4 text-green-600" />
+                            <p className="text-lg font-bold text-green-600">{item.cost.toFixed(2)}</p>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-medium text-gray-500 mb-1">Supplier</label>
+                          <p className="text-sm font-medium text-gray-900">{item.supplier}</p>
+                        </div>
+
+                        <div className="pt-3 border-t border-gray-200">
+                          <label className="block text-xs font-medium text-gray-500 mb-2">Supplier Details</label>
+                          <div className="space-y-2 text-xs text-gray-600">
+                            <div>
+                              <span className="font-medium">Address:</span>
+                              <p className="mt-0.5">{item.supplier_details.address}</p>
+                            </div>
+                            <div>
+                              <span className="font-medium">Phone:</span>
+                              <p className="mt-0.5">{item.supplier_details.phone}</p>
+                            </div>
+                            <div>
+                              <span className="font-medium">Contact:</span>
+                              <p className="mt-0.5">{item.supplier_details.contact}</p>
+                            </div>
+                            <div>
+                              <span className="font-medium">Email:</span>
+                              <p className="mt-0.5">{item.supplier_details.email}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PartView;

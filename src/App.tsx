@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import PartsManagement from './PartsManagement';
 import PartDetail from './PartDetail';
+import PartView from './PartView';
 import TemplateManagement from './TemplateManagement';
 import TemplateDetail from './TemplateDetail';
 import { Package, FileText } from 'lucide-react';
 
-type View = 'parts' | 'templates' | 'part-create' | 'part-edit' | 'template-create' | 'template-edit';
+type View = 'parts' | 'templates' | 'part-create' | 'part-edit' | 'part-view' | 'template-create' | 'template-edit';
 
 function App() {
   const [activeView, setActiveView] = useState<View>('parts');
@@ -19,6 +20,11 @@ function App() {
 
   const handleEditPart = (partId: number) => {
     setActiveView('part-edit');
+    setEditingPartId(partId);
+  };
+
+  const handleViewPart = (partId: number) => {
+    setActiveView('part-view');
     setEditingPartId(partId);
   };
 
@@ -101,7 +107,14 @@ function App() {
           <PartsManagement
             onCreatePart={handleCreatePart}
             onEditPart={handleEditPart}
-            onViewPart={(id) => console.log('View part', id)}
+            onViewPart={handleViewPart}
+          />
+        )}
+
+        {activeView === 'part-view' && editingPartId && (
+          <PartView
+            partId={editingPartId}
+            onBack={handleBackToParts}
           />
         )}
 
