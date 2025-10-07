@@ -325,14 +325,14 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
               </div>
             </div>
 
-            <div>
+            <div className="w-1/2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                rows={1}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
                 placeholder="Enter part description"
               />
             </div>
