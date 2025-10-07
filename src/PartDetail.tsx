@@ -11,14 +11,11 @@ interface PartDetailProps {
 const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = null, onBack, onSave }) => {
   const [formData, setFormData] = useState({
     part_name: '',
-    equipment_id: '',
-    equipment_name: '',
-    category: '',
     current_stock: '',
     min_stock: '',
     dni: false,
     description: '',
-    selected_template: '',
+    template_id: templateId || null,
     part_number_1: '',
     cost_1: '',
     supplier_1: '',
@@ -27,22 +24,13 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
     supplier_2: '',
     part_number_3: '',
     cost_3: '',
-    supplier_3: '',
-    from_template: false
+    supplier_3: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const isEdit = !!partId;
 
-  const partsListTemplates = [
-    { id: 1, name: 'Excavator Maintenance Template', category: 'Excavators' },
-    { id: 2, name: 'Generator Standard Parts', category: 'Generators' },
-    { id: 3, name: 'Compressor Maintenance Kit', category: 'Compressors' },
-    { id: 4, name: 'Loader Basic Parts', category: 'Loaders' },
-    { id: 5, name: 'Dozer Service Template', category: 'Bulldozers' },
-    { id: 6, name: 'General Supplies Template', category: 'Supplies' }
-  ];
 
   const suppliers = [
     {
@@ -89,52 +77,21 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
     }
   ];
 
-  const equipmentOptions = [
-    { id: 'N/A', name: 'General Use (Supplies)', category: 'Supplies' },
-    { id: 'EXC-001', name: 'CAT 320D Excavator', category: 'Excavators' },
-    { id: 'EXC-002', name: 'John Deere 350G Excavator', category: 'Excavators' },
-    { id: 'GEN-045', name: 'Kohler 150kW Generator', category: 'Generators' },
-    { id: 'GEN-046', name: 'Cummins 200kW Generator', category: 'Generators' },
-    { id: 'BUL-012', name: 'John Deere 650K Dozer', category: 'Bulldozers' },
-    { id: 'BUL-013', name: 'CAT D6T Dozer', category: 'Bulldozers' },
-    { id: 'LDR-023', name: 'CAT 950 Wheel Loader', category: 'Loaders' },
-    { id: 'LDR-024', name: 'John Deere 644K Loader', category: 'Loaders' },
-    { id: 'CMP-078', name: 'Atlas Copco GA30', category: 'Compressors' },
-    { id: 'CMP-079', name: 'Ingersoll Rand R55', category: 'Compressors' }
-  ];
+
+  const [templateInfo, setTemplateInfo] = useState<any>(null);
 
   React.useEffect(() => {
     if (templateId) {
       const mockTemplate = {
         id: templateId,
-        name: 'Excavator Standard Maintenance',
-        assigned_equipment_ids: ['EXC-001', 'EXC-002']
+        name: 'Excavator Standard Maintenance'
       };
 
-      const assignedEquipment = equipmentOptions.filter(eq =>
-        mockTemplate.assigned_equipment_ids.includes(eq.id)
-      );
-
-      if (assignedEquipment.length > 0) {
-        const firstEquipment = assignedEquipment[0];
-        setFormData(prev => ({
-          ...prev,
-          equipment_id: firstEquipment.id,
-          equipment_name: firstEquipment.name,
-          category: firstEquipment.category,
-          from_template: true,
-          selected_template: mockTemplate.name
-        }));
-      } else {
-        setFormData(prev => ({
-          ...prev,
-          equipment_id: 'Not Assigned',
-          equipment_name: 'Not Assigned',
-          category: 'Not Assigned',
-          from_template: true,
-          selected_template: mockTemplate.name
-        }));
-      }
+      setTemplateInfo(mockTemplate);
+      setFormData(prev => ({
+        ...prev,
+        template_id: templateId
+      }));
     }
   }, [templateId]);
 
@@ -169,7 +126,6 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
     const newErrors: Record<string, string> = {};
 
     if (!formData.part_name.trim()) newErrors.part_name = 'Part name is required';
-    if (!formData.equipment_id) newErrors.equipment_id = 'Equipment selection is required';
 
     if (!formData.dni) {
       if (formData.current_stock === '' || parseInt(formData.current_stock) < 0) newErrors.current_stock = 'Current stock must be 0 or greater';
@@ -194,21 +150,8 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
     }, 1000);
   };
 
-  const getSelectedEquipment = () => {
-    return equipmentOptions.find(eq => eq.id === formData.equipment_id);
-  };
-
   const getSelectedSupplier = (supplierName: string) => {
     return suppliers.find(sup => sup.name === supplierName);
-  };
-
-  const getAvailableTemplates = () => {
-    const selectedEquipment = getSelectedEquipment();
-    if (!selectedEquipment) return [];
-
-    return partsListTemplates.filter(template =>
-      template.category === selectedEquipment.category
-    );
   };
 
   const renderSupplierDetails = (supplierNumber: number) => {
@@ -258,7 +201,16 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <div className="space-y-4">
-            <div className="grid gap-4" style={{ gridTemplateColumns: 'calc(20% + 25px) calc(20% + 25px) calc(20% + 25px) calc(15% - 140px) calc(15% - 150px) 120px' }}>
+            {templateInfo && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-blue-900">Adding part to template:</span>
+                  <span className="text-sm text-blue-800">{templateInfo.name}</span>
+                </div>
+              </div>
+            )}
+
+            <div className="grid gap-4" style={{ gridTemplateColumns: '2fr 1fr 1fr 120px' }}>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Part Name <span className="text-red-500">*</span>
@@ -276,51 +228,6 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                 {errors.part_name && (
                   <p className="text-red-500 text-xs mt-1">{errors.part_name}</p>
                 )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Equipment {!formData.from_template && <span className="text-red-500">*</span>}
-                  {formData.from_template && <span className="text-blue-600 text-xs ml-2">(From Template)</span>}
-                </label>
-                {formData.from_template ? (
-                  <div className="w-full px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-gray-900 text-sm">
-                    {formData.equipment_name} {formData.equipment_id !== 'Not Assigned' && <span className="text-gray-500 font-mono text-xs">({formData.equipment_id})</span>}
-                  </div>
-                ) : (
-                  <>
-                    <select
-                      name="equipment_id"
-                      value={formData.equipment_id}
-                      onChange={handleInputChange}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                        errors.equipment_id ? 'border-red-500' : 'border-gray-300'
-                      }`}
-                    >
-                      <option value="">Select equipment</option>
-                      {equipmentOptions.map(eq => (
-                        <option key={eq.id} value={eq.id}>{eq.name} ({eq.id})</option>
-                      ))}
-                    </select>
-                    {errors.equipment_id && (
-                      <p className="text-red-500 text-xs mt-1">{errors.equipment_id}</p>
-                    )}
-                  </>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Category
-                  {formData.from_template && <span className="text-blue-600 text-xs ml-2">(From Template)</span>}
-                </label>
-                <div className={`w-full px-3 py-2 border rounded-lg text-sm ${
-                  formData.from_template
-                    ? 'bg-blue-50 border-blue-200 text-gray-900'
-                    : 'bg-gray-50 border-gray-200 text-gray-600'
-                }`}>
-                  {formData.from_template ? formData.category : (getSelectedEquipment()?.category || 'Select equipment first')}
-                </div>
               </div>
 
               <div>
@@ -463,41 +370,16 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
               ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  placeholder="Enter part description"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Add to Parts List Template
-                </label>
-                <select
-                  name="selected_template"
-                  value={formData.selected_template}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                >
-                  <option value="">Select template (optional)</option>
-                  {getAvailableTemplates().map(template => (
-                    <option key={template.id} value={template.name}>{template.name}</option>
-                  ))}
-                </select>
-                <p className="text-xs text-gray-500 mt-1">
-                  {getSelectedEquipment()
-                    ? `Templates for ${getSelectedEquipment()?.category} category`
-                    : 'Select equipment first to see available templates'
-                  }
-                </p>
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                placeholder="Enter part description"
+              />
             </div>
           </div>
 
