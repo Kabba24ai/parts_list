@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowLeft, Package, DollarSign, Box, AlertCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, Package, DollarSign, Box, AlertCircle, Pencil, X, Check } from 'lucide-react';
 
 interface PartViewProps {
   partId: number;
@@ -7,6 +7,9 @@ interface PartViewProps {
 }
 
 const PartView: React.FC<PartViewProps> = ({ partId, onBack }) => {
+  const [editingPrice, setEditingPrice] = useState<number | null>(null);
+  const [editedPrice, setEditedPrice] = useState<string>('');
+
   const mockPart = {
     id: partId,
     part_name: 'Hydraulic Filter',
@@ -86,8 +89,88 @@ const PartView: React.FC<PartViewProps> = ({ partId, onBack }) => {
 
   const stockBadge = getStockBadge();
 
+  const handleEditPrice = (index: number, currentPrice: number) => {
+    setEditingPrice(index);
+    setEditedPrice(currentPrice.toString());
+  };
+
+  const handleSavePrice = (index: number) => {
+    const price = parseFloat(editedPrice);
+    if (!isNaN(price) && price > 0) {
+      console.log(`Saving price for part number ${index}:`, price);
+      alert(`Price updated to $${price.toFixed(2)}`);
+      setEditingPrice(null);
+      setEditedPrice('');
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingPrice(null);
+    setEditedPrice('');
+  };
+
   return (
     <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+      {editingPrice !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-96">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Edit Price</h3>
+              <button
+                onClick={handleCancelEdit}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Price
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <DollarSign className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={editedPrice}
+                  onChange={(e) => setEditedPrice(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
+                  placeholder="0.00"
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSavePrice(editingPrice);
+                    } else if (e.key === 'Escape') {
+                      handleCancelEdit();
+                    }
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={handleCancelEdit}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleSavePrice(editingPrice)}
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center justify-center gap-2"
+              >
+                <Check className="h-4 w-4" />
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex-1 overflow-auto">
         <div className="max-w-7xl mx-auto p-6">
           <div className="mb-6">
@@ -168,9 +251,16 @@ const PartView: React.FC<PartViewProps> = ({ partId, onBack }) => {
 
                         <div>
                           <label className="block text-xs font-medium text-gray-500 mb-1">Cost</label>
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-2">
                             <DollarSign className="h-4 w-4 text-green-600" />
                             <p className="text-lg font-bold text-green-600">{item.cost.toFixed(2)}</p>
+                            <button
+                              onClick={() => handleEditPrice(index, item.cost)}
+                              className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                              title="Edit price"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </button>
                           </div>
                         </div>
 
