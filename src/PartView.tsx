@@ -162,35 +162,7 @@ const PartView: React.FC<PartViewProps> = ({ partId, onBack }) => {
                 </div>
               </div>
 
-              {mockPart.equipment_items && mockPart.equipment_items.length > 0 && (
-                <div className="mb-8">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Assigned Equipment</h2>
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    <table className="w-full">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Equipment Name</th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Equipment ID</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200">
-                        {mockPart.equipment_items.map((item, index) => (
-                          <tr key={index} className="hover:bg-gray-50">
-                            <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
-                            <td className="px-4 py-3">
-                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-mono font-medium bg-gray-100 text-gray-800 border">
-                                {item.id}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
-              <div>
+              <div className="mb-8">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Supplier Information</h2>
                 <div className="grid grid-cols-3 gap-6">
                   {mockPart.part_numbers.map((item, index) => (
@@ -242,6 +214,34 @@ const PartView: React.FC<PartViewProps> = ({ partId, onBack }) => {
                   ))}
                 </div>
               </div>
+
+              {mockPart.equipment_items && mockPart.equipment_items.length > 0 && (
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Assigned Equipment</h2>
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Equipment Name</th>
+                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Equipment ID</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {mockPart.equipment_items.map((item, index) => (
+                          <tr key={index} className="hover:bg-gray-50">
+                            <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
+                            <td className="px-4 py-3">
+                              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-mono font-medium bg-gray-100 text-gray-800 border">
+                                {item.id}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
