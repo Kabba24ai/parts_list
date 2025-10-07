@@ -523,7 +523,7 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
               className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
             >
               <Save className="h-4 w-4" />
-              {loading ? 'Saving...' : (isEdit ? 'Update Part' : 'Create Part')}
+              {loading ? 'Saving...' : (isEdit ? 'Update Part' : 'Save Part')}
             </button>
           </div>
         </div>
