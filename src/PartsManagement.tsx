@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Plus, Eye, Trash2, Package, CreditCard as Edit, X, ArrowLeft, Save, AlertCircle, DollarSign } from 'lucide-react';
+import { Search, Plus, Eye, Trash2, Package, CreditCard as Edit, X, ArrowLeft, Save, AlertCircle, DollarSign, Building2 } from 'lucide-react';
+import SupplierSearch from './SupplierSearch';
 
 // Master Parts List Component
 const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
@@ -216,6 +217,7 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
   const [showStockModal, setShowStockModal] = useState(false);
   const [editingPart, setEditingPart] = useState(null);
   const [newStockLevel, setNewStockLevel] = useState('');
+  const [showSupplierSearch, setShowSupplierSearch] = useState(false);
 
   const categories = ['Bulldozers', 'Compressors', 'Excavators', 'Generators', 'Loaders', 'Supplies'];
   const equipmentOptions = [
@@ -510,13 +512,23 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
               )}
             </div>
 
-            <button
-              onClick={handleCreatePart}
-              className="flex items-center space-x-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex-shrink-0"
-            >
-              <Plus className="h-4 w-4" />
-              <span>Add Part</span>
-            </button>
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={() => setShowSupplierSearch(true)}
+                className="flex items-center space-x-2 px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 rounded-lg font-medium transition-colors flex-shrink-0"
+              >
+                <Building2 className="h-4 w-4" />
+                <span>Supplier Search</span>
+              </button>
+
+              <button
+                onClick={handleCreatePart}
+                className="flex items-center space-x-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex-shrink-0"
+              >
+                <Plus className="h-4 w-4" />
+                <span>Add Part</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -688,6 +700,13 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
               </div>
             </div>
           </div>
+        )}
+
+        {showSupplierSearch && (
+          <SupplierSearch
+            onClose={() => setShowSupplierSearch(false)}
+            onViewPart={onViewPart}
+          />
         )}
       </div>
     </div>
