@@ -102,6 +102,8 @@ const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBa
   const [selectedParts, setSelectedParts] = useState<number[]>([]);
   const [partsFilter, setPartsFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [equipmentCategoryFilter, setEquipmentCategoryFilter] = useState('');
+  const [equipmentSearchFilter, setEquipmentSearchFilter] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [draggedItem, setDraggedItem] = useState<number | null>(null);
@@ -332,50 +334,112 @@ const TemplateDetail: React.FC<TemplateDetailProps> = ({ templateId = null, onBa
             {errors.equipment && (
               <p className="text-red-500 text-sm mb-2">{errors.equipment}</p>
             )}
+
+            <div className="flex gap-3 mb-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <input
+                  type="text"
+                  placeholder="Search equipment by name or ID..."
+                  value={equipmentSearchFilter}
+                  onChange={(e) => setEquipmentSearchFilter(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-sm"
+                />
+              </div>
+              <select
+                value={equipmentCategoryFilter}
+                onChange={(e) => setEquipmentCategoryFilter(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white min-w-[160px] text-sm"
+              >
+                <option value="">All Categories</option>
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+              {(equipmentSearchFilter || equipmentCategoryFilter) && (
+                <button
+                  onClick={() => {
+                    setEquipmentSearchFilter('');
+                    setEquipmentCategoryFilter('');
+                  }}
+                  className="px-3 py-2 text-gray-600 hover:text-gray-800 transition-colors text-sm"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
             <div className="space-y-2 max-h-60 overflow-y-auto border border-gray-200 rounded-lg p-3">
-              {categories.map(category => {
-                const categoryEquipment = equipmentOptions.filter(eq => eq.category === category);
-                if (categoryEquipment.length === 0) return null;
+              {categories
+                .filter(category => !equipmentCategoryFilter || category === equipmentCategoryFilter)
+                .map(category => {
+                  const categoryEquipment = equipmentOptions
+                    .filter(eq => eq.category === category)
+                    .filter(eq => {
+                      if (!equipmentSearchFilter) return true;
+                      const searchLower = equipmentSearchFilter.toLowerCase();
+                      return eq.name.toLowerCase().includes(searchLower) ||
+                             eq.id.toLowerCase().includes(searchLower);
+                    });
 
-                return (
-                  <div key={category} className="mb-4 last:mb-0">
-                    <h3 className="text-sm font-semibold text-gray-700 mb-2">{category}</h3>
-                    <div className="space-y-1">
-                      {categoryEquipment.map(equipment => (
-                        <label key={equipment.id} className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={templateData.assigned_equipment_ids.includes(equipment.id)}
-                            onChange={(e) => {
-                              const currentCategory = getTemplateCategory();
+                  if (categoryEquipment.length === 0) return null;
 
-                              if (e.target.checked) {
-                                if (currentCategory !== 'Not Assigned' && currentCategory !== equipment.category) {
-                                  alert(`You can only assign equipment from the same category. Current category: ${currentCategory}`);
-                                  return;
+                  return (
+                    <div key={category} className="mb-4 last:mb-0">
+                      <h3 className="text-sm font-semibold text-gray-700 mb-2">{category}</h3>
+                      <div className="space-y-1">
+                        {categoryEquipment.map(equipment => (
+                          <label key={equipment.id} className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={templateData.assigned_equipment_ids.includes(equipment.id)}
+                              onChange={(e) => {
+                                const currentCategory = getTemplateCategory();
+
+                                if (e.target.checked) {
+                                  if (currentCategory !== 'Not Assigned' && currentCategory !== equipment.category) {
+                                    alert(`You can only assign equipment from the same category. Current category: ${currentCategory}`);
+                                    return;
+                                  }
+                                  setTemplateData(prev => ({
+                                    ...prev,
+                                    assigned_equipment_ids: [...prev.assigned_equipment_ids, equipment.id]
+                                  }));
+                                } else {
+                                  setTemplateData(prev => ({
+                                    ...prev,
+                                    assigned_equipment_ids: prev.assigned_equipment_ids.filter(id => id !== equipment.id)
+                                  }));
                                 }
-                                setTemplateData(prev => ({
-                                  ...prev,
-                                  assigned_equipment_ids: [...prev.assigned_equipment_ids, equipment.id]
-                                }));
-                              } else {
-                                setTemplateData(prev => ({
-                                  ...prev,
-                                  assigned_equipment_ids: prev.assigned_equipment_ids.filter(id => id !== equipment.id)
-                                }));
-                              }
-                            }}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                          />
-                          <span className="text-sm text-gray-900">
-                            {equipment.name} <span className="text-gray-500 font-mono text-xs">({equipment.id})</span>
-                          </span>
-                        </label>
-                      ))}
+                              }}
+                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            />
+                            <span className="text-sm text-gray-900">
+                              {equipment.name} <span className="text-gray-500 font-mono text-xs">({equipment.id})</span>
+                            </span>
+                          </label>
+                        ))}
+                      </div>
                     </div>
+                  );
+                })}
+              {categories
+                .filter(category => !equipmentCategoryFilter || category === equipmentCategoryFilter)
+                .every(category => {
+                  const categoryEquipment = equipmentOptions
+                    .filter(eq => eq.category === category)
+                    .filter(eq => {
+                      if (!equipmentSearchFilter) return true;
+                      const searchLower = equipmentSearchFilter.toLowerCase();
+                      return eq.name.toLowerCase().includes(searchLower) ||
+                             eq.id.toLowerCase().includes(searchLower);
+                    });
+                  return categoryEquipment.length === 0;
+                }) && (
+                  <div className="text-center py-8 text-gray-500">
+                    <p className="text-sm">No equipment found matching your filters</p>
                   </div>
-                );
-              })}
+                )}
             </div>
             <p className="text-xs text-gray-500 mt-2">
               Select one or more equipment. All equipment must be from the same category.
