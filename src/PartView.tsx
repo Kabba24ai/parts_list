@@ -106,15 +106,6 @@ const PartView: React.FC<PartViewProps> = ({ partId, onBack }) => {
                 <Package className="h-8 w-8 text-white" />
                 <h1 className="text-3xl font-bold text-white">{mockPart.part_name}</h1>
               </div>
-              <div className="flex items-center gap-4 mt-3">
-                <span className="text-blue-100 text-sm">Category: {mockPart.category}</span>
-                {mockPart.template && (
-                  <>
-                    <span className="text-blue-200">•</span>
-                    <span className="text-blue-100 text-sm">List: {mockPart.template}</span>
-                  </>
-                )}
-              </div>
             </div>
 
             <div className="p-8">
@@ -215,9 +206,25 @@ const PartView: React.FC<PartViewProps> = ({ partId, onBack }) => {
                 </div>
               </div>
 
+              <div className="mb-8">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Part Assignment</h2>
+                <div className="grid grid-cols-2 gap-6 mb-6">
+                  <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                    <label className="block text-xs font-medium text-gray-500 mb-2">Category</label>
+                    <p className="text-base font-medium text-gray-900">{mockPart.category}</p>
+                  </div>
+                  {mockPart.template && (
+                    <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                      <label className="block text-xs font-medium text-gray-500 mb-2">Parts List</label>
+                      <p className="text-base font-medium text-gray-900">{mockPart.template}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {mockPart.equipment_items && mockPart.equipment_items.length > 0 && (
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Assigned Equipment</h2>
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Equipment Assignment</h2>
                   <div className="border border-gray-200 rounded-lg overflow-hidden">
                     <table className="w-full">
                       <thead className="bg-gray-50">
