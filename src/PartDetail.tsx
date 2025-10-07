@@ -33,12 +33,56 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
   const isEdit = !!partId;
 
   const availableTemplates = [
-    { id: 1, name: 'Excavator Standard Maintenance', category: 'Excavators' },
-    { id: 2, name: 'Generator Maintenance Parts', category: 'Generators' },
-    { id: 3, name: 'Compressor Service Kit', category: 'Compressors' },
-    { id: 4, name: 'Loader Basic Parts', category: 'Loaders' },
-    { id: 5, name: 'Dozer Maintenance Template', category: 'Bulldozers' },
-    { id: 6, name: 'General Supplies', category: 'Supplies' }
+    {
+      id: 1,
+      name: 'Excavator Standard Maintenance',
+      category: 'Excavators',
+      equipment: [
+        { name: 'CAT 320D', category: 'Excavators' },
+        { name: 'CAT 330F', category: 'Excavators' },
+        { name: 'Komatsu PC200', category: 'Excavators' }
+      ]
+    },
+    {
+      id: 2,
+      name: 'Generator Maintenance Parts',
+      category: 'Generators',
+      equipment: [
+        { name: 'Kohler 100KW', category: 'Generators' },
+        { name: 'Cummins 150KW', category: 'Generators' }
+      ]
+    },
+    {
+      id: 3,
+      name: 'Compressor Service Kit',
+      category: 'Compressors',
+      equipment: [
+        { name: 'Atlas Copco GA75', category: 'Compressors' }
+      ]
+    },
+    {
+      id: 4,
+      name: 'Loader Basic Parts',
+      category: 'Loaders',
+      equipment: [
+        { name: 'CAT 950H', category: 'Loaders' },
+        { name: 'John Deere 644K', category: 'Loaders' }
+      ]
+    },
+    {
+      id: 5,
+      name: 'Dozer Maintenance Template',
+      category: 'Bulldozers',
+      equipment: [
+        { name: 'CAT D8T', category: 'Bulldozers' }
+      ]
+    },
+    {
+      id: 6,
+      name: 'General Supplies',
+      category: 'Supplies',
+      equipment: []
+    }
   ];
 
   const suppliers = [
@@ -113,6 +157,13 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
       ...prev,
       [name]: newValue
     }));
+
+    if (name === 'template_id' && value) {
+      const selectedTemplate = availableTemplates.find(t => t.id === parseInt(value));
+      setTemplateInfo(selectedTemplate || null);
+    } else if (name === 'template_id' && !value) {
+      setTemplateInfo(null);
+    }
 
     if (name === 'dni' && checked) {
       setFormData(prev => ({
@@ -432,6 +483,30 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                 </div>
               ))}
             </div>
+
+            {formData.template_id && templateInfo && templateInfo.equipment && templateInfo.equipment.length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Equipment in this List</h3>
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Equipment Name</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Category</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {templateInfo.equipment.map((item: any, index: number) => (
+                        <tr key={index} className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
+                          <td className="px-4 py-3 text-sm text-gray-600">{item.category}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
