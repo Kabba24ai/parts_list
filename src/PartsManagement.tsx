@@ -10,6 +10,9 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       category: 'Compressors',
       equipment_name: 'Atlas Copco GA30',
       equipment_id: 'CMP-078',
+      equipment_items: [
+        { name: 'Atlas Copco GA30', id: 'CMP-078' }
+      ],
       part_number: 'AF-2024-012',
       supplier: 'Atlas Copco',
       unit_cost: 67.25,
@@ -23,6 +26,11 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       category: 'Excavators',
       equipment_name: 'CAT 320D Excavator',
       equipment_id: 'EXC-001',
+      equipment_items: [
+        { name: 'CAT 320D Excavator', id: 'EXC-001' },
+        { name: 'CAT 330F', id: 'EXC-003' },
+        { name: 'Komatsu PC200', id: 'EXC-004' }
+      ],
       part_number: 'CHH-2024-001',
       supplier: 'Parker Hannifin',
       unit_cost: 125.00,
@@ -36,6 +44,10 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       category: 'Compressors',
       equipment_name: 'Atlas Copco GA30',
       equipment_id: 'CMP-078',
+      equipment_items: [
+        { name: 'Atlas Copco GA30', id: 'CMP-078' },
+        { name: 'Ingersoll Rand R55', id: 'CMP-079' }
+      ],
       part_number: 'CWH-2024-004',
       supplier: 'Atlas Copco',
       unit_cost: 450.00,
@@ -49,6 +61,10 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       category: 'Generators',
       equipment_name: 'Kohler 150kW Generator',
       equipment_id: 'GEN-045',
+      equipment_items: [
+        { name: 'Kohler 150kW Generator', id: 'GEN-045' },
+        { name: 'Cummins 200kW Generator', id: 'GEN-046' }
+      ],
       part_number: 'OF-2024-005',
       supplier: 'Kohler Power',
       unit_cost: 28.50,
@@ -62,6 +78,9 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       category: 'Supplies',
       equipment_name: 'General Use',
       equipment_id: 'N/A',
+      equipment_items: [
+        { name: 'General Use', id: 'N/A' }
+      ],
       part_number: 'CL-2024-007',
       supplier: 'Simple Green',
       unit_cost: 12.50,
@@ -75,6 +94,11 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       category: 'Excavators',
       equipment_name: 'CAT 320D Excavator',
       equipment_id: 'EXC-001',
+      equipment_items: [
+        { name: 'CAT 320D Excavator', id: 'EXC-001' },
+        { name: 'CAT 330F', id: 'EXC-003' },
+        { name: 'Komatsu PC200', id: 'EXC-004' }
+      ],
       part_number: 'HF-2024-001',
       supplier: 'Caterpillar Inc.',
       unit_cost: 45.99,
@@ -88,6 +112,9 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       category: 'Bulldozers',
       equipment_name: 'John Deere 650K Dozer',
       equipment_id: 'BUL-012',
+      equipment_items: [
+        { name: 'John Deere 650K Dozer', id: 'BUL-012' }
+      ],
       part_number: 'HS-2024-015',
       supplier: 'John Deere',
       unit_cost: 89.50,
@@ -101,6 +128,9 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       category: 'Supplies',
       equipment_name: 'General Use',
       equipment_id: 'N/A',
+      equipment_items: [
+        { name: 'General Use', id: 'N/A' }
+      ],
       part_number: 'GR-2024-003',
       supplier: 'Mobil 1',
       unit_cost: 8.75,
@@ -114,6 +144,10 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       category: 'Loaders',
       equipment_name: 'CAT 950 Wheel Loader',
       equipment_id: 'LDR-023',
+      equipment_items: [
+        { name: 'CAT 950 Wheel Loader', id: 'LDR-023' },
+        { name: 'John Deere 644K Loader', id: 'LDR-024' }
+      ],
       part_number: 'RT-2024-003',
       supplier: 'Caterpillar Inc.',
       unit_cost: 8500.00,
@@ -127,6 +161,9 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       category: 'Supplies',
       equipment_name: 'General Use',
       equipment_id: 'N/A',
+      equipment_items: [
+        { name: 'General Use', id: 'N/A' }
+      ],
       part_number: 'ST-2024-001',
       supplier: 'Industrial Supply Co.',
       unit_cost: 24.99,
@@ -140,6 +177,9 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       category: 'Generators',
       equipment_name: 'Kohler 150kW Generator',
       equipment_id: 'GEN-045',
+      equipment_items: [
+        { name: 'Kohler 150kW Generator', id: 'GEN-045' }
+      ],
       part_number: 'SEP-2024-002',
       supplier: 'Kohler Power',
       unit_cost: 750.00,
@@ -153,6 +193,10 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
       category: 'Loaders',
       equipment_name: 'CAT 950 Wheel Loader',
       equipment_id: 'LDR-023',
+      equipment_items: [
+        { name: 'CAT 950 Wheel Loader', id: 'LDR-023' },
+        { name: 'John Deere 644K Loader', id: 'LDR-024' }
+      ],
       part_number: 'TF-2024-008',
       supplier: 'Parker Hannifin',
       unit_cost: 32.75,
@@ -490,7 +534,16 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
                         <span className="text-sm text-gray-900">{part.category}</span>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="text-sm text-gray-900">{part.equipment_name}</span>
+                        <span className="text-sm text-gray-900">
+                          {part.equipment_items && part.equipment_items.length > 0 ? (
+                            <>
+                              {part.equipment_items[0].name}
+                              {part.equipment_items.length > 1 && <span className="text-blue-600 font-semibold ml-1">+</span>}
+                            </>
+                          ) : (
+                            part.equipment_name
+                          )}
+                        </span>
                       </td>
                       <td className="py-3 px-3">
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-mono font-medium bg-gray-100 text-gray-800 border">
