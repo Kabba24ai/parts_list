@@ -219,8 +219,8 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
               </div>
             )}
 
-            <div className="grid gap-4" style={{ gridTemplateColumns: '2fr 2fr 1fr 1fr 120px' }}>
-              <div>
+            <div className="flex gap-4">
+              <div className="flex-1">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Part Name <span className="text-red-500">*</span>
                 </label>
@@ -239,7 +239,7 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                 )}
               </div>
 
-              <div>
+              <div className="flex-1">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Assign to List
                   {templateId && <span className="text-blue-600 text-xs ml-2">(From Template)</span>}
@@ -265,7 +265,7 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                 )}
               </div>
 
-              <div className="w-1/2">
+              <div className="w-28">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Current Stock {!formData.dni && <span className="text-red-500">*</span>}
                 </label>
@@ -288,7 +288,7 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                 )}
               </div>
 
-              <div className="w-1/2">
+              <div className="w-28">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Min Stock {!formData.dni && <span className="text-red-500">*</span>}
                 </label>
