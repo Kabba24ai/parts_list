@@ -31,6 +31,14 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
   const [loading, setLoading] = useState(false);
   const isEdit = !!partId;
 
+  const availableTemplates = [
+    { id: 1, name: 'Excavator Standard Maintenance', category: 'Excavators' },
+    { id: 2, name: 'Generator Maintenance Parts', category: 'Generators' },
+    { id: 3, name: 'Compressor Service Kit', category: 'Compressors' },
+    { id: 4, name: 'Loader Basic Parts', category: 'Loaders' },
+    { id: 5, name: 'Dozer Maintenance Template', category: 'Bulldozers' },
+    { id: 6, name: 'General Supplies', category: 'Supplies' }
+  ];
 
   const suppliers = [
     {
@@ -210,7 +218,7 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
               </div>
             )}
 
-            <div className="grid gap-4" style={{ gridTemplateColumns: '2fr 1fr 1fr 120px' }}>
+            <div className="grid gap-4" style={{ gridTemplateColumns: '2fr 2fr 1fr 1fr 120px' }}>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Part Name <span className="text-red-500">*</span>
@@ -227,6 +235,32 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                 />
                 {errors.part_name && (
                   <p className="text-red-500 text-xs mt-1">{errors.part_name}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Assign to List
+                  {templateId && <span className="text-blue-600 text-xs ml-2">(From Template)</span>}
+                </label>
+                {templateId ? (
+                  <div className="w-full px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-gray-900 text-sm">
+                    {templateInfo?.name || 'Loading...'}
+                  </div>
+                ) : (
+                  <select
+                    name="template_id"
+                    value={formData.template_id || ''}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  >
+                    <option value="">None (Optional)</option>
+                    {availableTemplates.map(template => (
+                      <option key={template.id} value={template.id}>
+                        {template.name}
+                      </option>
+                    ))}
+                  </select>
                 )}
               </div>
 
