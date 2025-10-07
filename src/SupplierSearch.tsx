@@ -25,10 +25,9 @@ interface Part {
 
 interface SupplierSearchProps {
   onClose: () => void;
-  onViewPart?: (partId: number) => void;
 }
 
-const SupplierSearch: React.FC<SupplierSearchProps> = ({ onClose, onViewPart }) => {
+const SupplierSearch: React.FC<SupplierSearchProps> = ({ onClose }) => {
   const suppliers: Supplier[] = [
     {
       name: 'Atlas Copco',

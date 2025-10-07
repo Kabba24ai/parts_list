@@ -1,9 +1,15 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Plus, Eye, Trash2, Package, CreditCard as Edit, X, ArrowLeft, Save, AlertCircle, DollarSign, Building2 } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Search, Plus, Eye, Trash2, Package, CreditCard as Edit, X, Building2 } from 'lucide-react';
 import SupplierSearch from './SupplierSearch';
 
+interface PartsManagementProps {
+  onCreatePart: () => void;
+  onEditPart: (partId: number) => void;
+  onViewPart: (partId: number) => void;
+}
+
 // Master Parts List Component
-const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
+const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }: PartsManagementProps) => {
   const [parts, setParts] = useState([
     {
       id: 3,
@@ -215,7 +221,7 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
   });
 
   const [showStockModal, setShowStockModal] = useState(false);
-  const [editingPart, setEditingPart] = useState(null);
+  const [editingPart, setEditingPart] = useState<any>(null);
   const [newStockLevel, setNewStockLevel] = useState('');
   const [showSupplierSearch, setShowSupplierSearch] = useState(false);
 
@@ -234,14 +240,14 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
     { id: 'GEN-045', name: 'Kohler 150kW Generator' }
   ];
 
-  const getStockStatus = (part) => {
+  const getStockStatus = (part: any) => {
     if (part.dni) return 'dni';
     if (part.stock_level === 0) return 'out-of-stock';
     if (part.stock_level < part.min_stock) return 'buy-now';
     return 'in-stock';
   };
 
-  const getStockBadge = (part) => {
+  const getStockBadge = (part: any) => {
     if (part.dni) {
       return {
         text: 'DNI',
@@ -302,7 +308,7 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
   }, [parts, filters]);
 
   const stats = useMemo(() => {
-    return parts.reduce((acc, part) => {
+    return parts.reduce((acc: any, part) => {
       const stockStatus = getStockStatus(part);
       acc[stockStatus] = (acc[stockStatus] || 0) + 1;
       acc.total = (acc.total || 0) + 1;
@@ -310,7 +316,7 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
     }, {});
   }, [parts]);
 
-  const handleFilterChange = (key, value) => {
+  const handleFilterChange = (key: string, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
@@ -318,7 +324,7 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
     setFilters({ search: '', category: '', equipmentId: '', stockStatus: '' });
   };
 
-  const handleStockClick = (part) => {
+  const handleStockClick = (part: any) => {
     if (part.dni) return;
     setEditingPart(part);
     setNewStockLevel(part.stock_level.toString());
@@ -345,15 +351,23 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
     }
   };
 
-  const handleViewPart = (partId) => {
-    onViewPart?.(partId) || alert(`Navigating to Part Details for Part ID: ${partId}`);
+  const handleViewPart = (partId: number) => {
+    if (onViewPart) {
+      onViewPart(partId);
+    } else {
+      alert(`Navigating to Part Details for Part ID: ${partId}`);
+    }
   };
 
-  const handleEditPart = (partId) => {
-    onEditPart?.(partId) || alert(`Opening Edit Part form for Part ID: ${partId}`);
+  const handleEditPart = (partId: number) => {
+    if (onEditPart) {
+      onEditPart(partId);
+    } else {
+      alert(`Opening Edit Part form for Part ID: ${partId}`);
+    }
   };
 
-  const handleDeletePart = (partId, partName) => {
+  const handleDeletePart = (partId: number, partName: string) => {
     if (window.confirm(`Are you sure you want to delete "${partName}"? This action cannot be undone.`)) {
       setParts(prev => prev.filter(part => part.id !== partId));
       alert(`Part "${partName}" has been deleted.`);
@@ -361,7 +375,11 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
   };
 
   const handleCreatePart = () => {
-    onCreatePart?.() || alert('Navigate to Create Part form');
+    if (onCreatePart) {
+      onCreatePart();
+    } else {
+      alert('Navigate to Create Part form');
+    }
   };
 
   return (
@@ -705,7 +723,6 @@ const PartsManagement = ({ onCreatePart, onEditPart, onViewPart }) => {
         {showSupplierSearch && (
           <SupplierSearch
             onClose={() => setShowSupplierSearch(false)}
-            onViewPart={onViewPart}
           />
         )}
       </div>

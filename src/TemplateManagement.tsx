@@ -1,49 +1,12 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Plus, Eye, Trash2, Package, CreditCard as Edit, X, ArrowLeft, Save, DollarSign, FileText, Copy, GripVertical } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Search, Plus, Trash2, CreditCard as Edit, X, FileText } from 'lucide-react';
 
-const mockParts = [
-  {
-    id: 1,
-    part_name: 'Hydraulic Filter',
-    category: 'Excavators',
-    equipment_name: 'CAT 320D Excavator',
-    equipment_id: 'EXC-001',
-    part_number: 'HF-2024-001',
-    supplier: 'Caterpillar Inc.',
-    unit_cost: 45.99,
-    stock_level: 12,
-    min_stock: 5,
-    dni: false
-  },
-  {
-    id: 2,
-    part_name: 'Engine Oil Filter',
-    category: 'Generators',
-    equipment_name: 'Kohler 150kW Generator',
-    equipment_id: 'GEN-045',
-    part_number: 'OF-2024-005',
-    supplier: 'Kohler Power',
-    unit_cost: 28.50,
-    stock_level: 8,
-    min_stock: 3,
-    dni: false
-  },
-  {
-    id: 3,
-    part_name: 'Air Filter Element',
-    category: 'Compressors',
-    equipment_name: 'Atlas Copco GA30',
-    equipment_id: 'CMP-078',
-    part_number: 'AF-2024-012',
-    supplier: 'Atlas Copco',
-    unit_cost: 67.25,
-    stock_level: 4,
-    min_stock: 2,
-    dni: false
-  }
-];
+interface TemplateManagementProps {
+  onCreateTemplate: () => void;
+  onEditTemplate: (templateId: number) => void;
+}
 
-const TemplateManagement = ({ onCreateTemplate, onEditTemplate }) => {
+const TemplateManagement = ({ onCreateTemplate, onEditTemplate }: TemplateManagementProps) => {
   const [templates, setTemplates] = useState([
     {
       id: 1,
@@ -86,7 +49,7 @@ const TemplateManagement = ({ onCreateTemplate, onEditTemplate }) => {
     });
   }, [templates, filters]);
 
-  const handleFilterChange = (key, value) => {
+  const handleFilterChange = (key: string, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
@@ -94,7 +57,7 @@ const TemplateManagement = ({ onCreateTemplate, onEditTemplate }) => {
     setFilters({ search: '', category: '' });
   };
 
-  const handleDeleteTemplate = (templateId, templateName) => {
+  const handleDeleteTemplate = (templateId: number, templateName: string) => {
     if (window.confirm('Are you sure you want to delete "' + templateName + '"?')) {
       setTemplates(prev => prev.filter(template => template.id !== templateId));
     }

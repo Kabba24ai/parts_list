@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Package, DollarSign, Box, AlertCircle, Pencil, X, Check } from 'lucide-react';
+import { ArrowLeft, Package, DollarSign, Box, Pencil, X, Check } from 'lucide-react';
 
 interface PartViewProps {
   partId: number;

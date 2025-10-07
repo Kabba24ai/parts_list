@@ -417,7 +417,7 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                         <input
                           type="text"
                           name={`part_number_${num}`}
-                          value={formData[`part_number_${num}` as keyof typeof formData]}
+                          value={String(formData[`part_number_${num}` as keyof typeof formData] || '')}
                           onChange={handleInputChange}
                           className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors font-mono text-sm bg-white ${
                             errors[`part_number_${num}`] ? 'border-red-500' : 'border-gray-300'
@@ -439,7 +439,7 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                             step="0.01"
                             max="1000000"
                             name={`cost_${num}`}
-                            value={formData[`cost_${num}` as keyof typeof formData]}
+                            value={String(formData[`cost_${num}` as keyof typeof formData] || '')}
                             onChange={handleInputChange}
                             className={`w-full pl-8 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white ${
                               errors[`cost_${num}`] ? 'border-red-500' : 'border-gray-300'
@@ -459,7 +459,7 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                       </label>
                       <select
                         name={`supplier_${num}`}
-                        value={formData[`supplier_${num}` as keyof typeof formData]}
+                        value={String(formData[`supplier_${num}` as keyof typeof formData] || '')}
                         onChange={handleInputChange}
                         className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white ${
                           errors[`supplier_${num}`] ? 'border-red-500' : 'border-gray-300'
