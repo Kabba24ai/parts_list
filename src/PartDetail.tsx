@@ -325,6 +325,18 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
               </div>
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                placeholder="Enter part description"
+              />
+            </div>
+
             <div className="grid grid-cols-3 gap-6" style={{ paddingTop: '30px', paddingBottom: '30px' }}>
               {[1, 2, 3].map(num => (
                 <div key={num} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
@@ -402,18 +414,6 @@ const PartDetail: React.FC<PartDetailProps> = ({ partId = null, templateId = nul
                   </div>
                 </div>
               ))}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                placeholder="Enter part description"
-              />
             </div>
           </div>
 
