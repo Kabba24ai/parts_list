@@ -1,12 +1,13 @@
 import { useState, useMemo } from 'react';
-import { Search, Plus, Trash2, CreditCard as Edit, X, FileText } from 'lucide-react';
+import { Search, Plus, Trash2, CreditCard as Edit, X, FileText, Eye } from 'lucide-react';
 
 interface TemplateManagementProps {
   onCreateTemplate: () => void;
   onEditTemplate: (templateId: number) => void;
+  onViewTemplate: (templateId: number) => void;
 }
 
-const TemplateManagement = ({ onCreateTemplate, onEditTemplate }: TemplateManagementProps) => {
+const TemplateManagement = ({ onCreateTemplate, onEditTemplate, onViewTemplate }: TemplateManagementProps) => {
   const [templates, setTemplates] = useState([
     {
       id: 1,
@@ -161,7 +162,14 @@ const TemplateManagement = ({ onCreateTemplate, onEditTemplate }: TemplateManage
                     <td className="py-3 px-3">
                       <div className="flex items-center space-x-1">
                         <button
-                          onClick={() => onEditTemplate && onEditTemplate(template.id)}
+                          onClick={() => onViewTemplate(template.id)}
+                          className="p-1 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="View Template"
+                        >
+                          <Eye className="h-3 w-3" />
+                        </button>
+                        <button
+                          onClick={() => onEditTemplate(template.id)}
                           className="p-1 text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50 rounded-lg transition-colors"
                           title="Edit Template"
                         >
