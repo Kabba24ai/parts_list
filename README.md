@@ -12,9 +12,13 @@ A comprehensive web application for managing parts inventory, equipment, and sup
 - **Hierarchical Sorting**: Default sort by Category (alphabetical), then Equipment Name, then Part Name
 
 ### Template Management
-- **Equipment Templates**: Create reusable maintenance templates for equipment categories
-- **Batch Part Assignment**: Add multiple parts to templates and manage equipment associations
-- **Quick Part Creation**: Create new parts directly from templates with pre-populated template assignments
+- **Parts List Templates**: Create reusable maintenance templates for equipment categories
+- **Category-Based Organization**: Templates automatically inherit category from assigned equipment
+- **Multi-Equipment Assignment**: Assign templates to multiple equipment within the same category
+- **Equipment Filtering**: Category filter and search to manage 100+ equipment items
+- **Batch Part Assignment**: Add multiple parts to templates with drag-and-drop reordering
+- **Template View**: Dedicated view screen showing all parts and assigned equipment
+- **Quick Part Creation**: Create new parts directly from templates with pre-populated assignments
 
 ### Supplier Management
 - **Supplier Search Window**: Dedicated search interface for finding parts by supplier
@@ -30,7 +34,8 @@ src/
 ├── PartDetail.tsx            # Create/Edit part form with supplier management
 ├── PartView.tsx              # Read-only part details view
 ├── TemplateManagement.tsx     # Template list and management
-├── TemplateDetail.tsx        # Create/Edit template form
+├── TemplateDetail.tsx        # Create/Edit template form with equipment filters
+├── TemplateView.tsx          # Read-only template details view
 ├── SupplierSearch.tsx        # Supplier search and parts browser
 ├── main.tsx                  # Application entry point
 └── index.css                 # Global styles with Tailwind CSS
@@ -132,10 +137,30 @@ Dedicated supplier search window with:
 
 ### TemplateManagement
 Template management interface with:
-- Template categories and equipment assignments
+- Template list with category badges
+- Search and filter by category
 - Parts count per template
-- Quick template creation and editing
-- Template-based part creation
+- Quick actions (View, Edit, Delete)
+- Template creation and editing
+
+### TemplateDetail
+Form component for creating/editing templates with:
+- Template name and description
+- Auto-assigned category based on equipment
+- Equipment assignment with category filtering and search
+- Multi-select equipment (must be from same category)
+- Parts selection modal with category filtering
+- Drag-and-drop part reordering
+- Create new parts directly from template
+
+### TemplateView
+Read-only template view with:
+- Template metadata and statistics
+- Assigned equipment list with details
+- Complete parts list with stock status
+- Part details (part number, supplier, costs, inventory)
+- Total template value calculation
+- Quick edit access
 
 ## Data Models
 
