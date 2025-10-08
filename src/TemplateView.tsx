@@ -204,10 +204,7 @@ const TemplateView: React.FC<TemplateViewProps> = ({ templateId, onBack, onEdit 
                       >
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1">
-                            <h3 className="font-semibold text-gray-900 mb-1">{part.part_name}</h3>
-                            <p className="text-sm text-gray-600">
-                              {part.equipment_name} <span className="text-gray-400">•</span> {part.category}
-                            </p>
+                            <h3 className="font-semibold text-gray-900">{part.part_name}</h3>
                           </div>
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${stockBadge.className}`}>
                             {stockBadge.text}
