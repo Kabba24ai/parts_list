@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, FileText, Package, Box, Building2, Edit } from 'lucide-react';
+import { ArrowLeft, FileText, Package, Box, Building2, CreditCard as Edit } from 'lucide-react';
 
 interface TemplateViewProps {
   templateId: number;
